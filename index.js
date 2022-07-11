@@ -1,14 +1,22 @@
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
-const io = require("socket.io")(server);
+const ws = require('express-ws')(app);
 
-app.use(express.static(__dirname + "/static"));
+app.ws('/ws', (cli, req) => {
+  //console.log(req.headers['origin'])
+  
+  cli.on('message', data => {
+    
+  })
+})
 
-io.on("connection", function(client) {
-  client.on("data", (data) => {
-    client.emit("data", "Hello from server");
+app.ws('/echo', function(ws, req) {
+  ws.on('message', function(msg) {
+    ws.send(msg);
   });
 });
+
+app.use(express.static(__dirname + "/static"));
 
 server.listen(3000);

@@ -1,21 +1,24 @@
 import log from "../log.js";
 
-export const WebSocket = {
+export const webSocket = {
   amount: 0,
-  run: async () => {  
-    const socket = io();
-  
-    console.log(await socket.on("connect", () => {
-      log("pass", "WebSocket connection established");
-      socket.emit("data", "Hello from client");
-    }));
-  
-    socket.on("data", () => {
-      log("pass", "WebSocket data received");
-    });
+  async init (next) {  
+    function WebSocket(url) {
+      return new Promise(r => {
+        const ws = new window.WebSocket(url);
+    
+        ws.onopen = function() {
+          return r(ws);
+        }
+      })
+    }
+    
+    let passed = 0;
+    var ws = await (WebSocket('wss://'+location['host']+'/ws'));
 
-    setTimeout(() => {
-      return 1
-    }, 1000);
+    console.log(ws)
+
+    next(passed);
+    return 1;
   }
 }

@@ -13,5 +13,5 @@ export default function log (type, message) {
   const container = document.createElement("div");
   container.innerHTML = template;
   const logContainer = document.getElementById("output");
-  logContainer.appendChild(container.children[0]);
+  logContainer.prepend(container.children[0]);
 }

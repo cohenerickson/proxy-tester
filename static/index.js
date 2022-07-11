@@ -10,9 +10,28 @@ Object.values(Tests).forEach((test) => {
 log("info", `Loaded ${totalTests} tests`);
 let testsPassed = 0;
 
-log("info", `Running tests...`);
-Object.values(Tests).forEach(async (test) => {
-  testsPassed += await test.run();
+let queue = [];
+Object.values(Tests).forEach((test) => {
+  queue.push(test);
 });
 
-log("info", `${testsPassed} of ${totalTests} tests passed`);
+function next (pass = 0) {
+  testsPassed += pass;
+  let test = queue[0];
+  if (test) {
+    queue.shift();
+    //setTimeout(() => {
+      test.init(next, add);
+   // }, 200)
+  } else {
+    log("info", `${testsPassed} of ${totalTests} tests passed`);
+  }
+}
+
+function add (pass = 0) {
+  testsPassed += pass;
+}
+
+log("info", `Running tests...`);
+
+next();
